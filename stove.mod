@@ -1,0 +1,184 @@
+PCBNEW-LibModule-V1  Sat 16 Nov 2013 10:11:18 PM MSK
+# encoding utf-8
+Units mm
+$INDEX
+AC_CONN
+RT424005
+SW_TACT
+TO126
+$EndINDEX
+$MODULE AC_CONN
+Po 0 0 0 15 52878D50 00000000 ~~
+Li AC_CONN
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -4 1.5 1.5 0 0.15 N V 21 N "AC_CONN"
+T1 0 4 1.5 1.5 0 0.15 N V 21 N "VAL**"
+$PAD
+Sh "1" R 4 4 0 0 0
+Dr 1.5 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -4 0
+$EndPAD
+$PAD
+Sh "2" R 4 4 0 0 0
+Dr 1.5 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 4 0
+$EndPAD
+$EndMODULE AC_CONN
+$MODULE RT424005
+Po 0 0 0 15 5287B540 00000000 ~~
+Li RT424005
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -7.5 1 1 0 0.15 N V 21 N "RT424005"
+T1 0 7 1 1 0 0.15 N V 21 N "VAL**"
+DS -2 -6 -2 6 0.15 21
+DS -2 6 26 6 0.15 21
+DS 26 6 26 -6 0.15 21
+DS 26 -6 -2 -6 0.15 21
+$PAD
+Sh "8" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 -3.5
+$EndPAD
+$PAD
+Sh "9" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 3.5
+$EndPAD
+$PAD
+Sh "3" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 15.5 -3.5
+$EndPAD
+$PAD
+Sh "14" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 15.5 3.5
+$EndPAD
+$PAD
+Sh "5" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 20.5 -3.5
+$EndPAD
+$PAD
+Sh "12" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 20.5 3.5
+$EndPAD
+$PAD
+Sh "1" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 25.5 -3.5
+$EndPAD
+$PAD
+Sh "16" C 2.5 2.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 25.5 3.5
+$EndPAD
+$EndMODULE RT424005
+$MODULE SW_TACT
+Po 0 0 0 15 5287B34A 00000000 ~~
+Li SW_TACT
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -6 1.5 1.5 0 0.15 N V 21 N "SW_TACT"
+T1 0 5 1.5 1.5 0 0.15 N V 21 N "VAL**"
+DC 0 0 -1.7 0.1 0.15 21
+DS -3 -3 3 -3 0.15 21
+DS 3 -3 3 3 0.15 21
+DS 3 3 -3 3 0.15 21
+DS -3 3 -3 -3 0.15 21
+$PAD
+Sh "1" C 2 2 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -3.9 -2.3
+$EndPAD
+$PAD
+Sh "1" C 2 2 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 3.9 -2.3
+$EndPAD
+$PAD
+Sh "2" C 2 2 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 3.9 2.3
+$EndPAD
+$PAD
+Sh "2" C 2 2 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -3.9 2.3
+$EndPAD
+$EndMODULE SW_TACT
+$MODULE TO126
+Po 0 0 0 15 52874F33 00000000 ~~
+Li TO126
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -4.5 1 1 0 0.15 N V 21 N "TO126"
+T1 0 4.5 1 1 0 0.15 N V 21 N "VAL**"
+DS -1.27 -3.81 -1.27 3.81 0.15 21
+DS -1.27 3.81 1.27 3.81 0.15 21
+DS 1.27 3.81 1.27 -3.81 0.15 21
+DS 1.27 -3.81 -1.27 -3.81 0.15 21
+$PAD
+Sh "1" R 1.5 1.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 -2.3
+$EndPAD
+$PAD
+Sh "2" C 1.5 1.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$PAD
+Sh "3" C 1.5 1.5 0 0 0
+Dr 0.7 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 2.3
+$EndPAD
+$SHAPE3D
+Na "to-xxx-packages/to126.wrl"
+Sc 1 1 1
+Of -0.2 0 0
+Ro 0 0 -90
+$EndSHAPE3D
+$EndMODULE TO126
+$EndLIBRARY

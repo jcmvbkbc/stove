@@ -1,0 +1,143 @@
+Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = Sat 16 Nov 2013 10:12:15 PM MSK
+
+BeginCmp
+TimeStamp = /52874FC7;
+Reference = C1;
+ValeurCmp = C;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5280657D;
+Reference = D1;
+ValeurCmp = BAS16;
+IdModule  = SOT23;
+EndCmp
+
+BeginCmp
+TimeStamp = /5280620D;
+Reference = IC1;
+ValeurCmp = ATMEGA88PA-A;
+IdModule  = TQFP32;
+EndCmp
+
+BeginCmp
+TimeStamp = /52806639;
+Reference = K1;
+ValeurCmp = RT424005;
+IdModule  = RT424005;
+EndCmp
+
+BeginCmp
+TimeStamp = /528719CA;
+Reference = P1;
+ValeurCmp = Serial;
+IdModule  = PIN_ARRAY_5x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52808B6D;
+Reference = P2;
+ValeurCmp = Thermo;
+IdModule  = PIN_ARRAY_2X2;
+EndCmp
+
+BeginCmp
+TimeStamp = /528719D9;
+Reference = P3;
+ValeurCmp = Prog;
+IdModule  = pin_array_8x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /52877595;
+Reference = P4;
+ValeurCmp = LCD;
+IdModule  = SIL-10;
+EndCmp
+
+BeginCmp
+TimeStamp = /52878067;
+Reference = P5;
+ValeurCmp = AC_in;
+IdModule  = AC_CONN;
+EndCmp
+
+BeginCmp
+TimeStamp = /52878076;
+Reference = P6;
+ValeurCmp = AC_out;
+IdModule  = AC_CONN;
+EndCmp
+
+BeginCmp
+TimeStamp = /52878085;
+Reference = P7;
+ValeurCmp = DC_in;
+IdModule  = AC_CONN;
+EndCmp
+
+BeginCmp
+TimeStamp = /528062B4;
+Reference = Q1;
+ValeurCmp = KT815B;
+IdModule  = TO126;
+EndCmp
+
+BeginCmp
+TimeStamp = /52808BCC;
+Reference = R1;
+ValeurCmp = 4.7k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52806436;
+Reference = R2;
+ValeurCmp = 1K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52868B10;
+Reference = R3;
+ValeurCmp = 4.7k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /52874B84;
+Reference = R4;
+ValeurCmp = 4.7k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /528686EE;
+Reference = SW1;
+ValeurCmp = Plus;
+IdModule  = SW_TACT;
+EndCmp
+
+BeginCmp
+TimeStamp = /528686DF;
+Reference = SW2;
+ValeurCmp = Minus;
+IdModule  = SW_TACT;
+EndCmp
+
+BeginCmp
+TimeStamp = /528686B7;
+Reference = SW3;
+ValeurCmp = Accept;
+IdModule  = SW_TACT;
+EndCmp
+
+BeginCmp
+TimeStamp = /528686D0;
+Reference = SW4;
+ValeurCmp = Cancel;
+IdModule  = SW_TACT;
+EndCmp
+
+EndListe
