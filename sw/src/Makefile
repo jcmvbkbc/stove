@@ -1,16 +1,18 @@
 PROJECT = stove
-SOURCES = main.c
+SOURCES = owi.c main.c
 
 MMCU       = atmega88p
 PART       = m88p
 PROGRAMMER = ARMUSBTINYH
 PROG_OPTIONS = -C ~/.avrduderc
 
+F_CPU	= 1000000
+
 CC      = avr-gcc
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
 
-CFLAGS  = -mmcu=$(MMCU) -g -O2 -W -Wall
+CFLAGS  = -mmcu=$(MMCU) -g -O2 -W -Wall -DF_CPU=$(F_CPU)
 LDFLAGS = -mmcu=$(MMCU) -g
 
 OBJDIR = obj

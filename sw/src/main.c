@@ -1,13 +1,9 @@
-#define F_CPU 1000000
 #define UART_BAUD 9600
 
 #include <inttypes.h>
 #include <avr/io.h>
-#include <util/delay_basic.h>
-
-#define TERM_DDR  DDRB
-#define TERM_PORT PORTB
-#define TERM_BIT  PB0
+#include <util/delay.h>
+#include "owi.h"
 
 #define HEAT_DDR  DDRC
 #define HEAT_PORT PORTC
@@ -34,12 +30,16 @@ static void uart_puts(const char *s)
 }
 
 int main() {
-	TERM_DDR |= _BV(TERM_BIT);
 	HEAT_DDR |= _BV(HEAT_BIT);
 
 	uart_init();
 	uart_puts("Hello\n");
 
 	while(1) {
+		float t = get_t();
+		_delay_ms(1000);
+
+		if (t > 20)
+			HEAT_PORT ^= _BV(HEAT_BIT);
 	}
 }
