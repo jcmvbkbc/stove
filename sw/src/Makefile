@@ -3,14 +3,15 @@ SOURCES = main.c
 
 MMCU       = atmega88p
 PART       = m88p
-PROGRAMMER = 2232HIO
+PROGRAMMER = ARMUSBTINYH
+PROG_OPTIONS = -C ~/.avrduderc
 
 CC      = avr-gcc
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
 
-CFLAGS  = -mmcu=$(MMCU) -O3 -Wall
-LDFLAGS = -mmcu=$(MMCU)
+CFLAGS  = -mmcu=$(MMCU) -g -O2 -W -Wall
+LDFLAGS = -mmcu=$(MMCU) -g
 
 OBJDIR = obj
 OBJECTS = $(patsubst %.c, $(OBJDIR)/%.o, $(SOURCES))
@@ -22,7 +23,7 @@ all: $(PROJECT).elf $(PROJECT).hex $(PROJECT).lst
 compile: $(PROJECT).elf
 
 upload: $(PROJECT).hex
-	avrdude -p $(PART) -c $(PROGRAMMER) -e -U flash:w:$(PROJECT).hex
+	avrdude -p $(PART) -c $(PROGRAMMER) $(PROG_OPTIONS) -e -U flash:w:$(PROJECT).hex
 
 clean:
 	rm -rf $(OBJECTS) obj/ $(PROJECT).hex $(PROJECT).elf $(PROJECT).lst
