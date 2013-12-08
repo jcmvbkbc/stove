@@ -94,15 +94,6 @@ static unsigned char owi_read_bit(void)
 	return res;
 }
 
-void eeprom_write(unsigned addr, unsigned char data)
-{
-	while (EECR & _BV(EEPE));
-	EEAR = addr;
-	EEDR = data;
-	EECR |= _BV(EEMPE);
-	EECR |= _BV(EEPE);
-}
-
 unsigned char owi_read(void)
 {
 	unsigned char res = 0x00;
@@ -147,10 +138,6 @@ float get_t()
 	//The master may issue a reset to terminate reading at any time
 	//if only part of the scratchpad data is needed
 	owi_init();
-
-	eeprom_write(0, t0);
-	eeprom_write(1, t1);
-	eeprom_write(2, 0xa5);
 
 	//T in 0..10, S in 11..15. S = 0 for positive numbers
 	short res = (t1 << 8) | t0;

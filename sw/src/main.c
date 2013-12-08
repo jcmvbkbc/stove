@@ -9,6 +9,15 @@
 #define HEAT_PORT PORTC
 #define HEAT_BIT  PC5
 
+void eeprom_write(unsigned addr, unsigned char data)
+{
+	while (EECR & _BV(EEPE));
+	EEAR = addr;
+	EEDR = data;
+	EECR = _BV(EEMPE);
+	EECR |= _BV(EEPE);
+}
+
 static void uart_init(void)
 {
 	UBRR0 = F_CPU / 8 / UART_BAUD - 1;
