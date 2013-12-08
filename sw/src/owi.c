@@ -43,8 +43,9 @@ unsigned char owi_init(void)
 
 void owi_write(unsigned char b)
 {
-	int i;
-	for (i = 0; i < 8; ++i) {
+	unsigned char i;
+
+	for (i = 0; i < 8; ++i, b >>= 1) {
 		//minimum of a 1mks recovery time between individual write slots.
 		OWI_DDR  &= ~_BV(OWI_BIT);
 		_delay_us(2);
@@ -54,7 +55,7 @@ void owi_write(unsigned char b)
 		OWI_DDR  |= _BV(OWI_BIT);
 		_delay_us(2);
 
-		if (b & _BV(i)) {
+		if (b & 1) {
 			//1: release the 1-wire bus within 15mks
 			OWI_DDR &= ~_BV(OWI_BIT);
 		} else {
@@ -62,6 +63,7 @@ void owi_write(unsigned char b)
 		}
 
 		_delay_us(65);
+		OWI_DDR &= ~_BV(OWI_BIT);
 	}
 }
 
