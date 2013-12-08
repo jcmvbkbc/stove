@@ -64,36 +64,32 @@ void owi_write(unsigned char b)
 	}
 }
 
-unsigned char owi_read()
+static unsigned char owi_read_bit(void)
 {
-	unsigned char res = 0x00;
+	unsigned char res = 0;
 
-	int i;
-	for (i = 0; i < 8; ++i) {
-		//a minimum of a 1mks recovery time between slots
-		OWI_DDR &= ~_BV(OWI_BIT);
-		_delay_us(2);
+	//a minimum of a 1mks recovery time between slots
+	OWI_DDR &= ~_BV(OWI_BIT);
+	_delay_us(2);
 
-		//read time slot is initiated by the master device pulling the 1-wire bus low
-		//for a minimum of 1mks and then releasing the bus
-		OWI_DDR  |= _BV(OWI_BIT);
-		OWI_PORT &= ~_BV(OWI_BIT);
-		_delay_us(2);
-		OWI_DDR &= ~_BV(OWI_BIT);
+	//read time slot is initiated by the master device pulling the 1-wire bus low
+	//for a minimum of 1mks and then releasing the bus
+	OWI_PORT &= ~_BV(OWI_BIT);
+	OWI_DDR  |= _BV(OWI_BIT);
+	_delay_us(2);
+	OWI_DDR &= ~_BV(OWI_BIT);
 
-		//Output data from the DS18B20 is valid for 15mks after the falling edge
-		//that initiated the read time slot.
-		//system timing margin is maximized by keeping T_INIT and T_RC as short as possible
-		//and by locating the master sample time during read time slots towards the end of the 15mks period
-		_delay_us(10);
+	//Output data from the DS18B20 is valid for 15mks after the falling edge
+	//that initiated the read time slot.
+	//system timing margin is maximized by keeping T_INIT and T_RC as short as possible
+	//and by locating the master sample time during read time slots towards the end of the 15mks period
+	_delay_us(15);
 
-		if (OWI_PIN & _BV(OWI_BIT)) {
-			res |= _BV(i);
-		}
+	if (OWI_PIN & _BV(OWI_BIT))
+		res = 1;
 
-		//All read time slots must be a minimum of 60mks in duration
-		_delay_us(50);
-	}
+	//All read time slots must be a minimum of 60mks in duration
+	_delay_us(50);
 
 	return res;
 }
@@ -107,6 +103,19 @@ void eeprom_write(unsigned addr, unsigned char data)
 	EECR |= _BV(EEPE);
 }
 
+unsigned char owi_read(void)
+{
+	unsigned char res = 0x00;
+	unsigned char i;
+
+	for (i = 0; i < 8; ++i) {
+		if (owi_read_bit())
+			res |= _BV(i);
+	}
+
+	return res;
+}
+
 float get_t()
 {
 	if (!owi_init()) {
@@ -117,15 +126,12 @@ float get_t()
 	owi_write(SKIP_ROM);
 	owi_write(CONVERT_T);
 
-	//T_CONV = 750 mks for 12-bit resolution
+	//T_CONV = 750 ms for 12-bit resolution
 	//If the DS18B20 is powered by an external supply,
 	//the master can issue read time slots after the Convert T command
 	//and the DS18B20 will respond by transmitting 0 while the temperature conversion is in progress
 	//and 1 when the conversion is done.
-	OWI_DDR &= ~_BV(OWI_BIT);
-	while (!(OWI_PIN & _BV(OWI_BIT))) {
-		_delay_us(50);
-	}
+	while (owi_read_bit() == 0);
 
 	if (!owi_init()) {
 		return T_UNDEF;
