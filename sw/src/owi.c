@@ -26,8 +26,8 @@
 unsigned char owi_init()
 {
 	//Master Tx reset pulse, 0 for 480mks minimum
-	OWI_DDR  |= _BV(OWI_BIT);
 	OWI_PORT &= ~_BV(OWI_BIT);
+	OWI_DDR  |= _BV(OWI_BIT);
 	_delay_us(485);
 	OWI_DDR  &= ~_BV(OWI_BIT);
 
@@ -49,8 +49,8 @@ void owi_write(unsigned char b)
 		_delay_us(2);
 
 		//both types of write time slots are initiated by the master pulling the 1-wire bus low
-		OWI_DDR  |= _BV(OWI_BIT);
 		OWI_PORT &= ~_BV(OWI_BIT);
+		OWI_DDR  |= _BV(OWI_BIT);
 		_delay_us(2);
 
 		if (b & _BV(i)) {
