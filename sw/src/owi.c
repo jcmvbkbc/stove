@@ -23,7 +23,7 @@
 /*
  * OWI step 1
  */
-unsigned char owi_init()
+unsigned char owi_init(void)
 {
 	//Master Tx reset pulse, 0 for 480mks minimum
 	OWI_PORT &= ~_BV(OWI_BIT);
@@ -34,10 +34,11 @@ unsigned char owi_init()
 	//Master Rx 480 mks minimum
 	//ds18b20 waits 15–60mks and then transmits a presence pulse, 0 for 60–240mks
 	_delay_us(65);
-	unsigned char res = !(OWI_PIN & _BV(OWI_BIT));
+	unsigned char res = ~OWI_PIN;
 	_delay_us(420);
+	res &= OWI_PIN;
 
-	return res;
+	return (res & _BV(OWI_BIT)) != 0;
 }
 
 void owi_write(unsigned char b)
