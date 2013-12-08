@@ -110,7 +110,7 @@ unsigned char owi_read(void)
 	return res;
 }
 
-float get_t()
+int get_t(void)
 {
 	if (!owi_init()) {
 		return T_UNDEF;
@@ -148,5 +148,5 @@ float get_t()
 	//The resolution of the temperature sensor is user-configurable to 9, 10, 11, or 12 bits,
 	//corresponding to increments of 0.5^C, 0.25^C, 0.125^C, and 0.0625^C, respectively.
 	//The default resolution at power-up is 12 bit.
-	return res * 0.0625;
+	return res >> 4;
 }

@@ -8,6 +8,6 @@
 
 #define T_UNDEF -100
 
-float get_t();
+int get_t(void);
 
 #endif

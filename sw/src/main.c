@@ -45,10 +45,10 @@ int main() {
 	uart_puts("Hello\n");
 
 	while(1) {
-		float t = get_t();
+		int t = get_t();
 		_delay_ms(1000);
 
-		if (t > 20)
+		if (t > 30)
 			HEAT_PORT ^= _BV(HEAT_BIT);
 	}
 }
