@@ -125,7 +125,11 @@ int get_t(void)
 	//the master can issue read time slots after the Convert T command
 	//and the DS18B20 will respond by transmitting 0 while the temperature conversion is in progress
 	//and 1 when the conversion is done.
-	while (owi_read_bit() == 0);
+
+	_delay_ms(750);
+	if (owi_read_bit() == 0) {
+		return T_UNDEF;
+	}
 
 	if (!owi_init()) {
 		return T_UNDEF;
