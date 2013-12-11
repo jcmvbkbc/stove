@@ -48,7 +48,7 @@ int main() {
 		int t = get_t();
 		_delay_ms(1000);
 
-		if (t > 30)
+		if (t > T(30))
 			HEAT_PORT ^= _BV(HEAT_BIT);
 	}
 }

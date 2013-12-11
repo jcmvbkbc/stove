@@ -6,7 +6,8 @@
 #ifndef owi_h
 #define owi_h
 
-#define T_UNDEF -100
+#define T_UNDEF (0x7fff)
+#define T(v) ((int)((v) * 16))
 
 int get_t(void);
 
