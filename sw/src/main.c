@@ -39,16 +39,45 @@ static void uart_puts(const char *s)
 }
 
 int main() {
+	unsigned char on = 0;
+	unsigned char off = 0;
+
 	HEAT_DDR |= _BV(HEAT_BIT);
+
+	HEAT_PORT |= _BV(HEAT_BIT);
+	_delay_ms(1000);
+	HEAT_PORT &= ~_BV(HEAT_BIT);
 
 	uart_init();
 	uart_puts("Hello\n");
 
 	while(1) {
 		int t = get_t();
-		_delay_ms(1000);
 
-		if (t > T(30))
-			HEAT_PORT ^= _BV(HEAT_BIT);
+		if (t == T_UNDEF) {
+			HEAT_PORT |= _BV(HEAT_BIT);
+			_delay_ms(500);
+			HEAT_PORT &= ~_BV(HEAT_BIT);
+			_delay_ms(500);
+			HEAT_PORT |= _BV(HEAT_BIT);
+			_delay_ms(500);
+			HEAT_PORT &= ~_BV(HEAT_BIT);
+			_delay_ms(30000);
+		} else {
+			if (t >= T(41)) {
+				on = 0;
+			}
+			if (t < T(39.5)) {
+				on = 1;
+			}
+			if (on || off > 30) {
+				HEAT_PORT |= _BV(HEAT_BIT);
+				off = 0;
+			} else {
+				HEAT_PORT &= ~_BV(HEAT_BIT);
+				off += 3;
+			}
+			_delay_ms(3000);
+		}
 	}
 }
