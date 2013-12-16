@@ -28,6 +28,8 @@ static void uart_init(void)
 
 static void uart_putc(int c)
 {
+	if (c == '\n')
+		uart_putc('\r');
 	while (!(UCSR0A & _BV(UDRE0)));
 	UDR0 = c;
 }
@@ -36,6 +38,30 @@ static void uart_puts(const char *s)
 {
 	while (*s)
 		uart_putc(*s++);
+}
+
+static void print_t(int t)
+{
+	char buf[10];
+	char *p = buf + sizeof(buf) - 1;
+	int i;
+	int sign = t < 0;
+
+	if (sign)
+		t = -t;
+	*p = 0;
+	t *= 10;
+	t >>= 4;
+	for (i = 0; t; ++i, t /= 10) {
+		*--p = '0' + (t % 10);
+		if (!i)
+			*--p = '.';
+	}
+	if (*p == '.')
+		*--p = '0';
+	if (sign)
+		*--p = '-';
+	uart_puts(p);
 }
 
 int main() {
@@ -55,6 +81,7 @@ int main() {
 		int t = get_t();
 
 		if (t == T_UNDEF) {
+			uart_puts("Thermo disconnected\n");
 			HEAT_PORT |= _BV(HEAT_BIT);
 			_delay_ms(500);
 			HEAT_PORT &= ~_BV(HEAT_BIT);
@@ -64,10 +91,18 @@ int main() {
 			HEAT_PORT &= ~_BV(HEAT_BIT);
 			_delay_ms(30000);
 		} else {
+			uart_puts("T: ");
+			print_t(t);
+			uart_puts("\n");
+
 			if (t >= T(41)) {
+				if (on)
+					uart_puts("Cooling\n");
 				on = 0;
 			}
 			if (t < T(39.5)) {
+				if (!on)
+					uart_puts("Heating\n");
 				on = 1;
 			}
 			if (on || off > 30) {
