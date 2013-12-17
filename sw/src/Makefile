@@ -33,6 +33,11 @@ clean:
 $(OBJDIR):
 	@mkdir $(OBJDIR)
 
+main.c: version.h
+
+version.h::
+	@echo "static const char version[] = \"`git describe --dirty --always`\";" > $@
+
 $(OBJDIR)/%.o: %.c $(OBJDIR)
 	@echo Compiling $< ...
 	@$(CC) $(CFLAGS) -c  $< -o $@

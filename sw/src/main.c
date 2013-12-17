@@ -5,6 +5,7 @@
 #include <util/delay.h>
 #include "owi.h"
 #include "lcd.h"
+#include "version.h"
 
 #define HEAT_DDR  DDRC
 #define HEAT_PORT PORTC
@@ -77,9 +78,16 @@ int main() {
 
 	uart_init();
 	uart_puts("Hello\n");
+	uart_puts("v.");
+	uart_puts(version);
+	uart_puts("\n");
 
 	lcd_init();
 	lcd_puts_xy(0, 0, "Hello!");
+	lcd_puts_xy(0, 1, "v.");
+	lcd_puts(version);
+	_delay_ms(3000);
+	lcd_clear();
 
 	while(1) {
 		int t = get_t();
