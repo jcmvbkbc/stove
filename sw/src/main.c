@@ -4,6 +4,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "owi.h"
+#include "lcd.h"
 
 #define HEAT_DDR  DDRC
 #define HEAT_PORT PORTC
@@ -76,6 +77,9 @@ int main() {
 
 	uart_init();
 	uart_puts("Hello\n");
+
+	lcd_init();
+	lcd_puts_xy(0, 0, "Hello!");
 
 	while(1) {
 		int t = get_t();
