@@ -11,6 +11,15 @@
 #define HEAT_PORT PORTC
 #define HEAT_BIT  PC5
 
+#define KEY_DDR		DDRD
+#define KEY_PORT	PORTD
+#define KEY_PIN		(PIND ^ KEY_MASK)
+#define KEY_PLUS	_BV(PD4)
+#define KEY_MINUS	_BV(PD5)
+#define KEY_ACCEPT	_BV(PD6)
+#define KEY_CANCEL	_BV(PD7)
+#define KEY_MASK	(KEY_PLUS | KEY_MINUS | KEY_ACCEPT | KEY_CANCEL)
+
 void eeprom_write(unsigned addr, unsigned char data)
 {
 	while (EECR & _BV(EEPE));
@@ -66,6 +75,12 @@ static void print_t(int t)
 	uart_puts(p);
 }
 
+static void key_init(void)
+{
+	KEY_DDR &= ~KEY_MASK;
+	KEY_PORT |= KEY_MASK;
+}
+
 int main() {
 	unsigned char on = 0;
 	unsigned char off = 0;
@@ -75,6 +90,8 @@ int main() {
 	HEAT_PORT |= _BV(HEAT_BIT);
 	_delay_ms(1000);
 	HEAT_PORT &= ~_BV(HEAT_BIT);
+
+	key_init();
 
 	uart_init();
 	uart_puts("Hello\n");
