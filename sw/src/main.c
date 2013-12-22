@@ -7,6 +7,7 @@
 #include "interrupt.h"
 #include "owi.h"
 #include "lcd.h"
+#include "timer.h"
 #include "version.h"
 
 #define HEAT_DDR  DDRC
@@ -140,6 +141,8 @@ int main() {
 
 	_delay_ms(2000);
 	lcd_clear();
+
+	timer_init();
 
 	while (1) {
 		int t = get_t();
