@@ -141,7 +141,7 @@ int main() {
 	_delay_ms(2000);
 	lcd_clear();
 
-	while(1) {
+	while (1) {
 		int t = get_t();
 
 		if (t == T_UNDEF) {
@@ -159,12 +159,12 @@ int main() {
 			print_t(t);
 			uart_puts("\n");
 
-			if (t >= T(41)) {
+			if (t >= T(39)) {
 				if (on)
 					uart_puts("Cooling\n");
 				on = 0;
 			}
-			if (t < T(39.5)) {
+			if (t < T(38)) {
 				if (!on)
 					uart_puts("Heating\n");
 				on = 1;
