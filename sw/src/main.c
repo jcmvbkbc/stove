@@ -3,6 +3,8 @@
 #include <inttypes.h>
 #include <avr/io.h>
 #include <util/delay.h>
+
+#include "interrupt.h"
 #include "owi.h"
 #include "lcd.h"
 #include "version.h"
@@ -19,6 +21,13 @@
 #define KEY_ACCEPT	_BV(PD6)
 #define KEY_CANCEL	_BV(PD7)
 #define KEY_MASK	(KEY_PLUS | KEY_MINUS | KEY_ACCEPT | KEY_CANCEL)
+
+static uint8_t pending_irq;
+
+void set_pending_irq(uint8_t irq)
+{
+	pending_irq |= irq;
+}
 
 void eeprom_write(unsigned addr, unsigned char data)
 {
