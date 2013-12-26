@@ -118,12 +118,6 @@ int main() {
 	unsigned char on = 0;
 	unsigned char off = 0;
 
-	HEAT_DDR |= _BV(HEAT_BIT);
-
-	HEAT_PORT |= _BV(HEAT_BIT);
-	_delay_ms(1000);
-	HEAT_PORT &= ~_BV(HEAT_BIT);
-
 	key_init();
 
 	uart_init();
@@ -136,7 +130,13 @@ int main() {
 	lcd_puts_xy(0, 0, "Hello!");
 	lcd_puts_xy(0, 1, "v.");
 	lcd_puts(version);
-	_delay_ms(3000);
+
+	HEAT_DDR |= _BV(HEAT_BIT);
+	HEAT_PORT |= _BV(HEAT_BIT);
+	_delay_ms(1000);
+	HEAT_PORT &= ~_BV(HEAT_BIT);
+
+	_delay_ms(2000);
 	lcd_clear();
 
 	while(1) {
