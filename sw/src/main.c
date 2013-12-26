@@ -16,6 +16,10 @@
 #define KEY_DDR		DDRD
 #define KEY_PORT	PORTD
 #define KEY_PIN		(PIND ^ KEY_MASK)
+#define KEY_PCIE	_BV(PCIE2)
+#define KEY_PCMSK	PCMSK2
+#define KEY_VECTOR	PCINT2_vect
+
 #define KEY_PLUS	_BV(PD4)
 #define KEY_MINUS	_BV(PD5)
 #define KEY_ACCEPT	_BV(PD6)
@@ -100,6 +104,14 @@ static void key_init(void)
 {
 	KEY_DDR &= ~KEY_MASK;
 	KEY_PORT |= KEY_MASK;
+
+	KEY_PCMSK |= KEY_MASK;
+	PCICR |= KEY_PCIE;
+}
+
+ISR(KEY_VECTOR)
+{
+	set_pending_irq(IRQ_KEY);
 }
 
 int main() {
