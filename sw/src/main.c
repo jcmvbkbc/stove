@@ -98,6 +98,8 @@ static void print_t(int t)
 	if (sign)
 		*--p = '-';
 	uart_puts(p);
+	lcd_puts_xy(10, 0, p);
+	lcd_puts("\x99""C   ");
 }
 
 static void key_init(void)
