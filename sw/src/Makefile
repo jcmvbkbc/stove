@@ -1,5 +1,5 @@
 PROJECT = stove
-SOURCES = owi.c main.c lcd.c timer.c
+SOURCES = owi.c main.c lcd.c timer.c eeprom.c
 
 MMCU       = atmega88p
 PART       = m88p
