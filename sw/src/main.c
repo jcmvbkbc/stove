@@ -15,13 +15,6 @@
 #define HEAT_PORT PORTC
 #define HEAT_BIT  PC5
 
-static uint8_t pending_irq;
-
-void set_pending_irq(uint8_t irq)
-{
-	pending_irq |= irq;
-}
-
 static void uart_init(void)
 {
 	UBRR0 = F_CPU / 8 / UART_BAUD - 1;

@@ -10,6 +10,7 @@ enum {
 };
 
 void set_pending_irq(uint8_t irq);
+uint8_t get_pending_irq(void);
 
 static inline uint8_t cli_save_irq(void)
 {
