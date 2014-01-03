@@ -1,5 +1,3 @@
-#define UART_BAUD 9600
-
 #include <inttypes.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -10,29 +8,8 @@
 #include "key.h"
 #include "lcd.h"
 #include "timer.h"
+#include "uart.h"
 #include "version.h"
-
-static void uart_init(void)
-{
-	UBRR0 = F_CPU / 8 / UART_BAUD - 1;
-	UCSR0A = _BV(U2X0);
-	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
-	UCSR0B = _BV(TXEN0) | _BV(RXEN0);
-}
-
-static void uart_putc(int c)
-{
-	if (c == '\n')
-		uart_putc('\r');
-	while (!(UCSR0A & _BV(UDRE0)));
-	UDR0 = c;
-}
-
-static void uart_puts(const char *s)
-{
-	while (*s)
-		uart_putc(*s++);
-}
 
 static void print_t(int t)
 {
