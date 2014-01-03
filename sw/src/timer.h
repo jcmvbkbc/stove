@@ -4,6 +4,6 @@
 #include <inttypes.h>
 
 void timer_init(void);
-uint32_t get_ms(void);
+uint32_t timer_get_time(void);
 
 #endif

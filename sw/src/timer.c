@@ -20,7 +20,7 @@ ISR(TIMER0_COMPA_vect)
 	ms_timer++;
 }
 
-uint32_t get_ms(void)
+uint32_t timer_get_time(void)
 {
 	uint32_t res;
 	uint8_t flags;
