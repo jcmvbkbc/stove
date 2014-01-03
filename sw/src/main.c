@@ -6,6 +6,7 @@
 
 #include "interrupt.h"
 #include "owi.h"
+#include "key.h"
 #include "lcd.h"
 #include "timer.h"
 #include "version.h"
@@ -13,19 +14,6 @@
 #define HEAT_DDR  DDRC
 #define HEAT_PORT PORTC
 #define HEAT_BIT  PC5
-
-#define KEY_DDR		DDRD
-#define KEY_PORT	PORTD
-#define KEY_PIN		(PIND ^ KEY_MASK)
-#define KEY_PCIE	_BV(PCIE2)
-#define KEY_PCMSK	PCMSK2
-#define KEY_VECTOR	PCINT2_vect
-
-#define KEY_PLUS	_BV(PD4)
-#define KEY_MINUS	_BV(PD5)
-#define KEY_ACCEPT	_BV(PD6)
-#define KEY_CANCEL	_BV(PD7)
-#define KEY_MASK	(KEY_PLUS | KEY_MINUS | KEY_ACCEPT | KEY_CANCEL)
 
 static uint8_t pending_irq;
 
@@ -80,20 +68,6 @@ static void print_t(int t)
 	uart_puts(p);
 	lcd_puts_xy(10, 0, p);
 	lcd_puts("\x99""C   ");
-}
-
-static void key_init(void)
-{
-	KEY_DDR &= ~KEY_MASK;
-	KEY_PORT |= KEY_MASK;
-
-	KEY_PCMSK |= KEY_MASK;
-	PCICR |= KEY_PCIE;
-}
-
-ISR(KEY_VECTOR)
-{
-	set_pending_irq(IRQ_KEY);
 }
 
 int main() {
