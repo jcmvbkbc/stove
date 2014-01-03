@@ -4,16 +4,13 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#include "heater.h"
 #include "interrupt.h"
 #include "owi.h"
 #include "key.h"
 #include "lcd.h"
 #include "timer.h"
 #include "version.h"
-
-#define HEAT_DDR  DDRC
-#define HEAT_PORT PORTC
-#define HEAT_BIT  PC5
 
 static void uart_init(void)
 {
@@ -80,10 +77,7 @@ int main() {
 	lcd_puts_xy(0, 1, "v.");
 	lcd_puts(version);
 
-	HEAT_DDR |= _BV(HEAT_BIT);
-	HEAT_PORT |= _BV(HEAT_BIT);
-	_delay_ms(1000);
-	HEAT_PORT &= ~_BV(HEAT_BIT);
+	heater_init();
 
 	_delay_ms(2000);
 	lcd_clear();
