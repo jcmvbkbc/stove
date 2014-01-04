@@ -87,7 +87,7 @@ void lcd_init(void)
 	lcd_on(0);
 	lcd_clear();
 	lcd_set_entry_mode(LCD_MODE_ID);
-	lcd_on(LCD_ON_DISPLAY | LCD_ON_CURSOR);
+	lcd_on(LCD_ON_DISPLAY | LCD_ON_BLINK);
 }
 
 void lcd_xy(uint8_t x, uint8_t y)
