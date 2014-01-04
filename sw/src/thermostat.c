@@ -36,6 +36,8 @@ static void thermostat_update_ui(void)
 	if (state->thermostat_time) {
 		lcd_puts_xy(7, 1, "/");
 		print_time(8, 1, state->thermostat_time, 0);
+	} else {
+		lcd_puts_xy(7, 1, "         ");
 	}
 
 	lcd_xy(editor_x[thermostat_ui_edit], editor_y[thermostat_ui_edit]);
