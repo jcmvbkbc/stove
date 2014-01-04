@@ -1,6 +1,7 @@
 #include <stddef.h>
 
 #include "heater.h"
+#include "key.h"
 #include "lcd.h"
 #include "owi.h"
 #include "thermo.h"
@@ -75,7 +76,60 @@ void thermostat_init(struct stove_state *state)
 	thermostat_state = state;
 }
 
+static key_listener_t thermostat_key_fsm;
+static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
+{
+	struct stove_state *state = p;
+	int sign = 0;
+	int t;
+
+	switch (key) {
+	case KEY_PLUS:
+		sign = 1;
+		break;
+
+	case KEY_MINUS:
+		sign = -1;
+		break;
+
+	case KEY_ACCEPT:
+		state_save(state);
+		if (++thermostat_ui_edit >= THERMOSTAT_UI_MAX) {
+			thermostat_ui_edit = 0;
+		}
+		break;
+
+	case KEY_CANCEL:
+		if (thermostat_ui_edit == THERMOSTAT_UI_CUR_TIME) {
+			state->cur_time = 0;
+			timer_set_time(0);
+		}
+		break;
+	}
+
+	if (sign) {
+		switch (thermostat_ui_edit) {
+		case THERMOSTAT_UI_T:
+			t = (state->thermostat_t * 10) >> 4;
+			while (t == (state->thermostat_t * 10) >> 4) {
+				state->thermostat_t += sign;
+			}
+			break;
+
+		case THERMOSTAT_UI_TIME:
+			state->thermostat_time += 60000 * sign;
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	thermostat_update_ui();
+}
+
 void thermostat_activate(void)
 {
 	thermo_set_listener(thermostat_fsm, thermostat_state);
+	key_set_listener(thermostat_key_fsm, thermostat_state);
 }

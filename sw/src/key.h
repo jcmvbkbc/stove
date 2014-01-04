@@ -2,6 +2,7 @@
 #define _KEY_H
 
 #include <inttypes.h>
+#include <avr/io.h>
 
 #define KEY_PLUS	_BV(PD4)
 #define KEY_MINUS	_BV(PD5)
