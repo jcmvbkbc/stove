@@ -8,6 +8,7 @@
 #include "key.h"
 #include "lcd.h"
 #include "owi.h"
+#include "state.h"
 #include "thermo.h"
 #include "timer.h"
 #include "uart.h"
@@ -41,6 +42,11 @@ void thermostat_activate(void)
 	thermo_set_listener(thermostat_fsm, NULL);
 }
 
+struct stove_state stove_state = {
+	.thermostat_t = T(39),
+	.mode = MODE_THERMOSTAT,
+};
+
 int main() {
 	key_init();
 
@@ -62,12 +68,15 @@ int main() {
 
 	timer_init();
 
+	timer_set_time(stove_state.cur_time);
+
 	sei();
 
 	heater_enable(1);
 
 	thermo_init();
-	thermostat_activate();
+	if (stove_state.mode == MODE_THERMOSTAT)
+		thermostat_activate();
 
 	while (1) {
 		switch (get_pending_irq()) {
