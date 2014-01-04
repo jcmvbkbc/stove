@@ -43,6 +43,19 @@ uint32_t timer_get_time(void)
 	return res;
 }
 
+void timer_set_time(uint32_t time)
+{
+	uint8_t flags = cli_save_irq();
+	uint32_t d = time - ms_timer;
+	uint8_t i;
+
+	for (i = 0; i < ARRAY_SIZE(timer); ++i)
+		timer[i].time += d;
+	timer_min += d;
+	ms_timer = time;
+	restore_irq(flags);
+}
+
 void timer_process_timers(void)
 {
 	uint32_t now;
