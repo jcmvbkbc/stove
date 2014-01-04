@@ -45,7 +45,7 @@ static void generic_load(void *p, uint8_t sz, uint16_t base)
 uint8_t state_load(struct stove_state *state)
 {
 	generic_load(state, sizeof(*state), EEPROM_STOVE_STATE);
-	return crc(state, sizeof(*state)) == 0;
+	return crc(state, offsetof(struct stove_state, crc)) == state->crc;
 }
 
 uint8_t state_save(struct stove_state *state)
@@ -59,7 +59,7 @@ uint8_t state_load_prog(struct stove_prog *prog, uint8_t idx)
 {
 	generic_load(prog, sizeof(*prog),
 		     EEPROM_STOVE_PROG + sizeof(*prog) * idx);
-	return crc(prog, sizeof(*prog)) == 0;
+	return crc(prog, offsetof(struct stove_prog, crc)) == prog->crc;
 }
 
 uint8_t state_save_prog(struct stove_prog *prog, uint8_t idx)
