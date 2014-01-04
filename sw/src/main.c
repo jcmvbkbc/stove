@@ -10,37 +10,11 @@
 #include "owi.h"
 #include "state.h"
 #include "thermo.h"
+#include "thermostat.h"
 #include "timer.h"
 #include "uart.h"
 #include "version.h"
 #include "ui.h"
-
-static void thermostat_fsm(int t, void *p)
-{
-	static uint8_t on = 0;
-
-	if (t == T_UNDEF) {
-		heater_alarm(1);
-		on = 0;
-	} else {
-		if (t >= T(39)) {
-			heater_on(0);
-			on = 0;
-		}
-		if (t < T(38)) {
-			on = 1;
-			heater_on(1);
-		}
-		heater_alarm(0);
-	}
-	print_t(t, T(39), on);
-	print_time(0, 1, timer_get_time(), 1);
-}
-
-void thermostat_activate(void)
-{
-	thermo_set_listener(thermostat_fsm, NULL);
-}
 
 struct stove_state stove_state = {
 	.thermostat_t = T(39),
@@ -69,6 +43,7 @@ int main() {
 	timer_init();
 
 	timer_set_time(stove_state.cur_time);
+	thermostat_init(&stove_state);
 
 	sei();
 
