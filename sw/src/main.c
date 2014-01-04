@@ -16,14 +16,19 @@
 #include "version.h"
 #include "ui.h"
 
-struct stove_state stove_state = {
-	.thermostat_t = T(39),
-	.mode = MODE_THERMOSTAT,
-};
+struct stove_state stove_state;
+
+static void state_record(void *p)
+{
+	timer_add(600000ul, state_record, p);
+	stove_state.cur_time = timer_get_time();
+	if (!state_save(&stove_state))
+		lcd_puts_xy(15, 1, "E");
+	else
+		lcd_puts_xy(15, 1, " ");
+}
 
 int main() {
-	key_init();
-
 	uart_init();
 	uart_puts("Hello\n");
 	uart_puts("v.");
@@ -40,9 +45,18 @@ int main() {
 	_delay_ms(2000);
 	lcd_clear();
 
+	key_init();
 	timer_init();
 
+	if (!state_load(&stove_state)) {
+		lcd_puts_xy(15, 1, "L");
+		stove_state = (struct stove_state){
+			.thermostat_t = T(39),
+			.mode = MODE_THERMOSTAT,
+		};
+	}
 	timer_set_time(stove_state.cur_time);
+	state_record(&stove_state);
 	thermostat_init(&stove_state);
 
 	sei();
