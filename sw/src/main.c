@@ -1,63 +1,16 @@
 #include <inttypes.h>
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "heater.h"
 #include "interrupt.h"
-#include "owi.h"
 #include "key.h"
 #include "lcd.h"
+#include "owi.h"
 #include "timer.h"
 #include "uart.h"
 #include "version.h"
-
-static void format_t(char buf[static 7], int t)
-{
-	if (t == T_UNDEF) {
-		strcpy(buf, "??.?");
-	} else {
-		uint8_t sign = t < 0;
-
-		if (sign) {
-			t = -t;
-			*buf++ = '-';
-		}
-		t *= 10;
-		t >>= 4;
-		sprintf(buf, "%d.%d", t / 10, t % 10);
-	}
-}
-
-static void print_t(int t, int t_target, uint8_t dir_t)
-{
-	char t_buf[8];
-	char t_target_buf[8];
-	char buf[20];
-	static const char dir[2] = {
-		0xda, 0xd9
-	};
-
-	format_t(t_buf, t);
-	format_t(t_target_buf, t_target);
-	sprintf(buf, "%5s %c%5s\x99""C", t_buf, dir[dir_t], t_target_buf);
-	lcd_puts_xy(0, 0, buf);
-}
-
-static void print_time(uint32_t time)
-{
-	char time_str[10];
-	unsigned time_min;
-	uint8_t colon;
-
-	colon = time & 1;
-	time_min = time / 60;
-
-	sprintf(time_str, "%02d%c%02d",
-		time_min / 60, colon ? ':' : ' ', time_min % 60);
-	lcd_puts_xy(0, 1, time_str);
-}
+#include "ui.h"
 
 struct thermo {
 	int t;
@@ -84,7 +37,7 @@ static void thermostat_fsm(int t)
 		heater_alarm(0);
 	}
 	print_t(t, T(39), on);
-	print_time(timer_get_time() / 1000);
+	print_time(0, 1, timer_get_time(), 1);
 }
 
 static void thermo_fsm(void *p)
