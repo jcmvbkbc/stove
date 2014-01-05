@@ -51,3 +51,9 @@ void print_time(uint8_t x, uint8_t y, uint32_t time, uint8_t blink)
 		time_min / 60, colon ? ':' : ' ', time_min % 60);
 	lcd_puts_xy(x, y, time_str);
 }
+
+void show_hint(uint8_t hint)
+{
+	lcd_xy(15, 1);
+	lcd_putc(hint);
+}

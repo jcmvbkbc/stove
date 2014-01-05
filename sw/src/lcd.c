@@ -67,6 +67,24 @@ static inline void lcd_set_addr(uint8_t addr)
 	_delay_us(40);
 }
 
+static void lcd_init_hints(void)
+{
+	static const uint8_t cg[] = {
+		0x0, 0x2, 0x0, 0x2, 0x0, 0xa, 0x0, 0x0, /* all */
+		0x0, 0x2, 0x0, 0x2, 0x0, 0x2, 0x0, 0x0, /* +/-/accept */
+		0x0, 0x0, 0x0, 0x0, 0x0, 0xa, 0x0, 0x0, /* accept/cancel */
+
+	};
+	uint8_t i;
+
+	lcd_write(0, 0x40);
+	_delay_us(40);
+	for (i = 0; i < sizeof(cg); ++i) {
+		lcd_write(1, cg[i]);
+		_delay_us(40);
+	}
+}
+
 void lcd_init(void)
 {
 	LCD_CTRL_PORT &= ~LCD_CTRL_MASK;
@@ -88,6 +106,7 @@ void lcd_init(void)
 	lcd_clear();
 	lcd_set_entry_mode(LCD_MODE_ID);
 	lcd_on(LCD_ON_DISPLAY | LCD_ON_BLINK);
+	lcd_init_hints();
 }
 
 void lcd_xy(uint8_t x, uint8_t y)
