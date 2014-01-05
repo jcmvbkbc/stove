@@ -7,7 +7,7 @@ PART       = m88p
 PROGRAMMER = ARMUSBTINYH
 PROG_OPTIONS = -C ~/.avrduderc
 
-F_CPU	= 1000000
+F_CPU	= 8000000
 
 CC      = avr-gcc
 OBJCOPY = avr-objcopy

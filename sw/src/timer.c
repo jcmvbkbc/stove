@@ -3,7 +3,7 @@
 #include "timer.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
-#define TIMER_TOP ((F_CPU) / 8000L) //for 1 ms with prescaler 8
+#define TIMER_TOP ((F_CPU) / 64000L) //for 1 ms with prescaler 64
 
 struct timer {
 	uint32_t time;
@@ -21,7 +21,7 @@ void timer_init(void)
 
 	OCR0A = TIMER_TOP;
 	TCCR0A |= _BV(WGM01); //clear timer on compare match
-	TCCR0B |= _BV(CS01); //prescaler CLKio/8
+	TCCR0B |= _BV(CS01) | _BV(CS00); //prescaler CLKio/64
 	TIMSK0 |= _BV(OCIE0A); //compare match interrupt enabled
 }
 
