@@ -23,6 +23,12 @@ static uint8_t thermostat_ui_edit;
 
 static void thermostat_update_ui(void)
 {
+	static const uint8_t hint[THERMOSTAT_UI_MAX] = {
+		UI_HINT_AC,
+		UI_HINT_PMA,
+		UI_HINT_PMA,
+		UI_HINT_AC,
+	};
 	static const uint8_t editor_x[THERMOSTAT_UI_MAX] = {
 		16, 11, 12, 4,
 	};
@@ -37,9 +43,10 @@ static void thermostat_update_ui(void)
 		lcd_puts_xy(7, 1, "/");
 		print_time(8, 1, state->thermostat_time, 0);
 	} else {
-		lcd_puts_xy(7, 1, "         ");
+		lcd_puts_xy(7, 1, "        ");
 	}
 
+	show_hint(hint[thermostat_ui_edit]);
 	lcd_xy(editor_x[thermostat_ui_edit], editor_y[thermostat_ui_edit]);
 }
 
