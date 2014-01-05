@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 
+#define EEPROM_CALIBRATION	0
 #define EEPROM_STOVE_STATE	16
 #define EEPROM_STOVE_PROG	64
 

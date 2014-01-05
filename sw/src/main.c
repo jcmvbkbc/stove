@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#include "eeprom.h"
 #include "heater.h"
 #include "interrupt.h"
 #include "key.h"
@@ -29,6 +30,7 @@ static void state_record(void *p)
 }
 
 int main() {
+	OSCCAL = eeprom_read(EEPROM_CALIBRATION);
 	uart_init();
 	uart_puts("Hello\n");
 	uart_puts("v.");
