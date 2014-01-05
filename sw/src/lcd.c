@@ -15,6 +15,7 @@
 #define LCD_DATA_MASK	0xf
 
 static uint8_t lcd_addr;
+static uint8_t lcd_current_page;
 
 static inline void lcd_prepare_write(uint8_t addr)
 {
@@ -137,4 +138,26 @@ void lcd_puts_xy(uint8_t x, uint8_t y, const char *str)
 	}
 }
 
+static void lcd_shift(uint8_t shift)
+{
+	lcd_write(0, 0x10 | (shift & 0xc));
+	_delay_us(40);
+}
 
+void lcd_page(uint8_t page)
+{
+	uint8_t shift = LCD_SHIFT_SC;
+	uint8_t d;
+	uint8_t i;
+
+	if (page < lcd_current_page) {
+		shift |= LCD_SHIFT_RL;
+		d = lcd_current_page - page;
+	} else {
+		d = page - lcd_current_page;
+	}
+	for (i = 0; i < d * 16; ++i) {
+		lcd_shift(shift);
+	}
+	lcd_current_page = page;
+}

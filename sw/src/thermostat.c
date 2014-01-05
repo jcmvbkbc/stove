@@ -139,6 +139,7 @@ static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 
 void thermostat_activate(void)
 {
+	lcd_page(0);
 	thermo_set_listener(thermostat_fsm, thermostat_state);
 	key_set_listener(thermostat_key_fsm, thermostat_state);
 }
