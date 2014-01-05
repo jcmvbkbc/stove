@@ -3,8 +3,6 @@
 #include "state.h"
 
 #define CRC_POLY 0xedb88320
-#define EEPROM_STOVE_STATE 16
-#define EEPROM_STOVE_PROG  64
 
 static uint32_t crc(const void *p, uint8_t sz)
 {

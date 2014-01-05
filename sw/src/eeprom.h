@@ -3,6 +3,9 @@
 
 #include <inttypes.h>
 
+#define EEPROM_STOVE_STATE	16
+#define EEPROM_STOVE_PROG	64
+
 void eeprom_write(unsigned addr, uint8_t data);
 uint8_t eeprom_read(unsigned addr);
 
