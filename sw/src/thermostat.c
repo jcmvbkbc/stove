@@ -1,8 +1,10 @@
 #include <stddef.h>
+#include <string.h>
 
 #include "heater.h"
 #include "key.h"
 #include "lcd.h"
+#include "menu.h"
 #include "owi.h"
 #include "thermo.h"
 #include "thermostat.h"
@@ -20,6 +22,19 @@ enum thermostat_ui_item {
 	THERMOSTAT_UI_MAX
 };
 static uint8_t thermostat_ui_edit;
+static struct stove_prog thermostat_prog;
+
+static uint8_t thermostat_get_point(void)
+{
+	uint16_t time_min = timer_get_time() / 60000;
+	uint8_t i;
+
+	for (i = 0; i < N_POINT; ++i) {
+		if (time_min < thermostat_prog.point[i].time)
+			break;
+	}
+	return i;
+}
 
 static void thermostat_update_ui(void)
 {
@@ -37,17 +52,52 @@ static void thermostat_update_ui(void)
 	};
 	struct stove_state *state = thermostat_state;
 
-	print_t(thermostat_last_t, state->thermostat_t, thermostat_heater);
 	print_time(0, 1, timer_get_time(), 1);
-	if (state->thermostat_time) {
-		lcd_puts_xy(7, 1, "/");
-		print_time(8, 1, state->thermostat_time, 0);
+	if (state->mode == MODE_THERMOSTAT) {
+		print_t(thermostat_last_t, state->thermostat_t,
+			thermostat_heater);
+		if (state->thermostat_time) {
+			lcd_puts_xy(7, 1, "/");
+			print_time(8, 1, state->thermostat_time, 0);
+		} else {
+			lcd_puts_xy(7, 1, "        ");
+		}
 	} else {
-		lcd_puts_xy(7, 1, "        ");
+		uint8_t i = thermostat_get_point();
+
+		if (i < N_POINT) {
+			print_t(thermostat_last_t, thermostat_prog.point[i].t,
+				thermostat_heater);
+			lcd_puts_xy(7, 1, "/");
+			print_time(8, 1, thermostat_prog.point[i].time * 60000,
+				   0);
+		} else {
+			print_t(thermostat_last_t, T_UNDEF,
+				thermostat_heater);
+			lcd_puts_xy(7, 1, "        ");
+		}
 	}
 
 	show_hint(hint[thermostat_ui_edit]);
 	lcd_xy(editor_x[thermostat_ui_edit], editor_y[thermostat_ui_edit]);
+}
+
+static void thermostat_control(int t, int target_t)
+{
+	if (t == T_UNDEF) {
+		heater_alarm(1);
+		thermostat_heater = 0;
+	} else {
+		if (t >= target_t) {
+			heater_on(0);
+			thermostat_heater = 0;
+		}
+		if (t < target_t - T(1)) {
+			thermostat_heater = 1;
+			heater_on(1);
+		}
+		heater_alarm(0);
+	}
 }
 
 static thermo_listener_t thermostat_fsm;
@@ -58,24 +108,30 @@ static void thermostat_fsm(int t, void *p)
 	thermostat_last_t = t;
 	if (!state->thermostat_time ||
 	    timer_get_time() < state->thermostat_time) {
-		if (t == T_UNDEF) {
-			heater_alarm(1);
-			thermostat_heater = 0;
-		} else {
-			if (t >= state->thermostat_t) {
-				heater_on(0);
-				thermostat_heater = 0;
-			}
-			if (t < state->thermostat_t - T(1)) {
-				thermostat_heater = 1;
-				heater_on(1);
-			}
-			heater_alarm(0);
-		}
+		thermostat_control(t, state->thermostat_t);
 	} else {
+		heater_alarm(0);
 		heater_on(0);
 		thermostat_heater = 0;
 
+	}
+	thermostat_update_ui();
+}
+
+static thermo_listener_t thermostat_prog_fsm;
+static void thermostat_prog_fsm(int t, void *p)
+{
+	struct stove_state *state = p;
+	uint8_t i = thermostat_get_point();
+
+	thermostat_last_t = t;
+
+	if (i < N_POINT) {
+		thermostat_control(t, thermostat_prog.point[i].t);
+	} else {
+		heater_alarm(0);
+		heater_on(0);
+		thermostat_heater = 0;
 	}
 	thermostat_update_ui();
 }
@@ -112,6 +168,8 @@ static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 		if (thermostat_ui_edit == THERMOSTAT_UI_CUR_TIME) {
 			state->cur_time = 0;
 			timer_set_time(0);
+		} else {
+			menu_activate();
 		}
 		break;
 	}
@@ -140,6 +198,14 @@ static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 void thermostat_activate(void)
 {
 	lcd_page(0);
-	thermo_set_listener(thermostat_fsm, thermostat_state);
-	key_set_listener(thermostat_key_fsm, thermostat_state);
+	if (thermostat_state->mode == MODE_THERMOSTAT) {
+		thermo_set_listener(thermostat_fsm, thermostat_state);
+		key_set_listener(thermostat_key_fsm, thermostat_state);
+	} else {
+		if (!state_load_prog(&thermostat_prog, thermostat_state->mode)) {
+			memset(&thermostat_prog, 0, sizeof(thermostat_prog));
+		}
+		thermo_set_listener(thermostat_prog_fsm, thermostat_state);
+		key_set_listener(thermostat_key_fsm, thermostat_state);
+	}
 }
