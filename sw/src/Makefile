@@ -1,6 +1,6 @@
 PROJECT = stove
 SOURCES = owi.c main.c lcd.c timer.c eeprom.c state.c key.c interrupt.c \
-	  heater.c uart.c thermo.c thermostat.c ui.c
+	  heater.c uart.c thermo.c thermostat.c ui.c menu.c
 
 MMCU       = atmega88p
 PART       = m88p
@@ -13,7 +13,7 @@ CC      = avr-gcc
 OBJCOPY = avr-objcopy
 OBJDUMP = avr-objdump
 
-CFLAGS  = -mmcu=$(MMCU) -g -O1 -W -Wall -DF_CPU=$(F_CPU)
+CFLAGS  = -mmcu=$(MMCU) -g -Os -W -Wall -DF_CPU=$(F_CPU)
 LDFLAGS = -mmcu=$(MMCU) -g
 
 OBJDIR = obj

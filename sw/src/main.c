@@ -8,6 +8,7 @@
 #include "interrupt.h"
 #include "key.h"
 #include "lcd.h"
+#include "menu.h"
 #include "owi.h"
 #include "state.h"
 #include "thermo.h"
@@ -59,6 +60,7 @@ int main() {
 	}
 	timer_set_time(stove_state.cur_time);
 	state_record(&stove_state);
+	menu_init(&stove_state);
 	thermostat_init(&stove_state);
 
 	sei();
@@ -66,8 +68,7 @@ int main() {
 	heater_enable(1);
 
 	thermo_init();
-	if (stove_state.mode == MODE_THERMOSTAT)
-		thermostat_activate();
+	thermostat_activate();
 
 	while (1) {
 		switch (get_pending_irq()) {
