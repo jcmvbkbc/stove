@@ -5,13 +5,16 @@
 
 #define MODE_THERMOSTAT 0xff
 
+#define N_PROG	7
+#define N_POINT	15
+
 struct stove_point {
 	uint16_t time; /* point time (minutes) */
 	int16_t t; /* point temperature */
 };
 
 struct stove_prog {
-	struct stove_point point[15];
+	struct stove_point point[N_POINT];
 	uint32_t crc;
 };
 
