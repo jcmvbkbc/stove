@@ -42,7 +42,7 @@ static void thermostat_update_ui(void)
 		UI_HINT_AC,
 		UI_HINT_PMA,
 		UI_HINT_PMA,
-		UI_HINT_AC,
+		UI_HINT_PMA,
 	};
 	static const uint8_t editor_x[THERMOSTAT_UI_MAX] = {
 		16, 11, 12, 4,
@@ -144,6 +144,12 @@ void thermostat_init(struct stove_state *state)
 static key_listener_t thermostat_key_fsm;
 static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 {
+	static const uint8_t bad_edit[2][THERMOSTAT_UI_MAX] = {
+		{
+			[THERMOSTAT_UI_T] = 1,
+			[THERMOSTAT_UI_TIME] = 1,
+		},
+	};
 	struct stove_state *state = p;
 	int sign = 0;
 	int t;
@@ -159,9 +165,11 @@ static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 
 	case KEY_ACCEPT:
 		state_save(state);
-		if (++thermostat_ui_edit >= THERMOSTAT_UI_MAX) {
-			thermostat_ui_edit = 0;
-		}
+		do {
+			if (++thermostat_ui_edit >= THERMOSTAT_UI_MAX) {
+				thermostat_ui_edit = 0;
+			}
+		} while (bad_edit[state->mode == MODE_THERMOSTAT][thermostat_ui_edit]);
 		break;
 
 	case KEY_CANCEL:
@@ -185,6 +193,11 @@ static void thermostat_key_fsm(uint8_t key, uint8_t keys_state, void *p)
 
 		case THERMOSTAT_UI_TIME:
 			state->thermostat_time += 60000 * sign;
+			break;
+
+		case THERMOSTAT_UI_CUR_TIME:
+			state->cur_time = timer_get_time() + 60000 * sign;
+			timer_set_time(state->cur_time);
 			break;
 
 		default:
